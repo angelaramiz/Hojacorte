@@ -1426,3 +1426,55 @@ function actualizarTotal() {
     const total = calcularTotal({ monedas, billetes });
     document.getElementById('total').textContent = total.toFixed(2);
 }
+
+// Hacer clic en la celda del fondo para editarla
+document.getElementById('row-15-col-4').addEventListener('click', function () {
+    editarFondo();
+});
+
+// Función para editar el valor del fondo
+async function editarFondo() {
+    const fondoActual = parseFloat(document.getElementById('row-15-col-4').textContent) || 3000;
+
+    const { value: nuevoFondo } = await Swal.fire({
+        title: 'Editar Fondo',
+        text: 'Ingrese la nueva cantidad para el fondo:',
+        input: 'number',
+        inputValue: fondoActual, // Mostrar el valor actual como predeterminado
+        inputAttributes: {
+            step: 'any',
+            min: '0'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            if (!value || isNaN(value) || parseFloat(value) < 0) {
+                return 'Por favor, ingrese un valor numérico válido mayor o igual a 0';
+            }
+        }
+    });
+
+    if (nuevoFondo) {
+        // Actualizar la celda con el nuevo valor
+        document.getElementById('row-15-col-4').textContent = parseFloat(nuevoFondo).toFixed(2);
+        
+        // Actualizar los totales relacionados
+        actualizarTotales();
+
+        // Guardar el nuevo estado en localStorage si hay un corte en progreso
+        if (localStorage.getItem('corteInProgress')) {
+            const savedData = JSON.parse(localStorage.getItem('corteInProgress'));
+            savedData.values['row-15-col-4'] = parseFloat(nuevoFondo).toFixed(2);
+            localStorage.setItem('corteInProgress', JSON.stringify(savedData));
+        }
+
+        Swal.fire({
+            title: 'Fondo Actualizado',
+            text: `El fondo se ha actualizado a $${parseFloat(nuevoFondo).toFixed(2)}`,
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }
+}
