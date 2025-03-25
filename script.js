@@ -1,12 +1,12 @@
 // Función para verificar si hay datos en la tabla o en localStorage
 function verificarDatos() {
     const idsToCheck = [
-        'row-2-col-3', 'row-3-col-4', 'row-4-col-2', 'row-4-col-3', 'row-5-col-2', 'row-5-col-3', 
-        'row-5-col-4', 'row-6-col-2', 'row-6-col-3', 'row-7-col-2', 'row-7-col-3', 'row-7-col-4', 
-        'row-8-col-2', 'row-8-col-3', 'row-8-col-5', 'row-9-col-3', 'row-9-col-4', 'row-10-col-2', 
-        'row-10-col-3', 'row-10-col-4', 'row-11-col-2', 'row-11-col-3', 'row-11-col-4', 'row-12-col-2', 
-        'row-12-col-3', 'row-12-col-4', 'row-13-col-2', 'row-13-col-3', 'row-13-col-4', 'row-14-col-2', 
-        'row-14-col-3', 'row-15-col-2', 'row-15-col-3', 'row-19-col-1', 'row-19-col-4', 'row-21-col-1', 
+        'row-2-col-3', 'row-3-col-4', 'row-4-col-2', 'row-4-col-3', 'row-5-col-2', 'row-5-col-3',
+        'row-5-col-4', 'row-6-col-2', 'row-6-col-3', 'row-7-col-2', 'row-7-col-3', 'row-7-col-4',
+        'row-8-col-2', 'row-8-col-3', 'row-8-col-5', 'row-9-col-3', 'row-9-col-4', 'row-10-col-2',
+        'row-10-col-3', 'row-10-col-4', 'row-11-col-2', 'row-11-col-3', 'row-11-col-4', 'row-12-col-2',
+        'row-12-col-3', 'row-12-col-4', 'row-13-col-2', 'row-13-col-3', 'row-13-col-4', 'row-14-col-2',
+        'row-14-col-3', 'row-15-col-2', 'row-15-col-3', 'row-19-col-1', 'row-19-col-4', 'row-21-col-1',
         'row-21-col-4'
     ];
 
@@ -87,7 +87,7 @@ async function iniciarCorte() {
         return result.value ? parseFloat(result.value) : null;
     }
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (event.target.classList.contains('swal2-close')) {
             Swal.close();
             event.target.closest('.swal2-container').__cancelled = true;
@@ -144,9 +144,9 @@ async function iniciarCorte() {
     ];
 
     var totals = [
-           { id: 'row-3-col-4', promptText: 'Ingrese el valor para T.Débito' },
-           { id: 'row-5-col-4', promptText: 'Ingrese el valor para T.Crédito' },
-           { id: 'row-7-col-4', promptText: 'Ingrese el valor para T.Amex' }
+        { id: 'row-3-col-4', promptText: 'Ingrese el valor para T.Débito' },
+        { id: 'row-5-col-4', promptText: 'Ingrese el valor para T.Crédito' },
+        { id: 'row-7-col-4', promptText: 'Ingrese el valor para T.Amex' }
     ];
 
     var totalMonedas = 0;
@@ -160,96 +160,96 @@ async function iniciarCorte() {
             saveDataToLocalStorage();
             verificarDatos();
             return;
-           }
-           if (value === 'cancel') {
-               saveDataToLocalStorage();
-               verificarDatos();
-               return;
+        }
+        if (value === 'cancel') {
+            saveDataToLocalStorage();
+            verificarDatos();
+            return;
+        }
+        if (value !== null && value !== 'done') {
+            document.getElementById(element.id).textContent = value;
+            if (element.multiplier) {
+                const ttlValue = value * element.multiplier;
+                const ttlId = element.id.replace('col-2', 'col-3');
+                document.getElementById(ttlId).textContent = ttlValue.toFixed(2);
+                if (element.id >= 'row-4-col-2' && element.id <= 'row-8-col-2') {
+                    totalMonedas += ttlValue;
+                } else if (element.id >= 'row-10-col-2' && element.id <= 'row-15-col-2') {
+                    totalBilletes += ttlValue;
+                }
             }
-           if (value !== null && value !== 'done') {
-               document.getElementById(element.id).textContent = value;
-               if (element.multiplier) {
-                   const ttlValue = value * element.multiplier;
-                   const ttlId = element.id.replace('col-2', 'col-3');
-                   document.getElementById(ttlId).textContent = ttlValue.toFixed(2);
-                   if (element.id >= 'row-4-col-2' && element.id <= 'row-8-col-2') {
-                       totalMonedas += ttlValue;
-                   } else if (element.id >= 'row-10-col-2' && element.id <= 'row-15-col-2') {
-                       totalBilletes += ttlValue;
-                   }
-               }
-               if (!primerDatoIngresado) {
-                   primerDatoIngresado = true;
-                   document.getElementById('limpiarTablaBtn').disabled = false; // Habilitar botón "Limpiar Tabla"
-               }
-           }
-       }
+            if (!primerDatoIngresado) {
+                primerDatoIngresado = true;
+                document.getElementById('limpiarTablaBtn').disabled = false; // Habilitar botón "Limpiar Tabla"
+            }
+        }
+    }
 
-       for (; currentStep - elements.length < totals.length; currentStep++) {
-           const total = totals[currentStep - elements.length];
-           const value = await getValue(total.promptText);
-           if (document.querySelector('.swal2-container').__cancelled) {
-               saveDataToLocalStorage();
-               verificarDatos();
-               return;
-           }
-           if (value === 'cancel') {
-               saveDataToLocalStorage();
-               verificarDatos();
-               return;
-           }
-           if (value !== null && value !== 'done') {
-               document.getElementById(total.id).textContent = value.toFixed(2);
-               if (!primerDatoIngresado) {
-                   primerDatoIngresado = true;
-                   document.getElementById('limpiarTablaBtn').disabled = false; // Habilitar botón "Limpiar Tabla"
-               }
-           }
-       }
+    for (; currentStep - elements.length < totals.length; currentStep++) {
+        const total = totals[currentStep - elements.length];
+        const value = await getValue(total.promptText);
+        if (document.querySelector('.swal2-container').__cancelled) {
+            saveDataToLocalStorage();
+            verificarDatos();
+            return;
+        }
+        if (value === 'cancel') {
+            saveDataToLocalStorage();
+            verificarDatos();
+            return;
+        }
+        if (value !== null && value !== 'done') {
+            document.getElementById(total.id).textContent = value.toFixed(2);
+            if (!primerDatoIngresado) {
+                primerDatoIngresado = true;
+                document.getElementById('limpiarTablaBtn').disabled = false; // Habilitar botón "Limpiar Tabla"
+            }
+        }
+    }
 
-       var totalGastosVales = 0;
-       const gastosResult = await getGastoValue('Ingrese los gastos', 'row-9-col-4');
-       if (gastosResult) {
-           gastosResult.forEach(gasto => {
-               totalGastosVales += gasto.amount;
-           });
-       }
-       document.getElementById('row-8-col-5').textContent = totalGastosVales.toFixed(2);
+    var totalGastosVales = 0;
+    const gastosResult = await getGastoValue('Ingrese los gastos', 'row-9-col-4');
+    if (gastosResult) {
+        gastosResult.forEach(gasto => {
+            totalGastosVales += gasto.amount;
+        });
+    }
+    document.getElementById('row-8-col-5').textContent = totalGastosVales.toFixed(2);
 
-       // Guardar datos en localStorage
-       saveDataToLocalStorage(); 
-       document.getElementById('row-2-col-3').textContent = totalMonedas.toFixed(2);
-       document.getElementById('row-9-col-3').textContent = totalBilletes.toFixed(2);
+    // Guardar datos en localStorage
+    saveDataToLocalStorage();
+    document.getElementById('row-2-col-3').textContent = totalMonedas.toFixed(2);
+    document.getElementById('row-9-col-3').textContent = totalBilletes.toFixed(2);
 
-       var fondo = parseFloat(document.getElementById('row-15-col-4').textContent) || 0;
-       var tEfectivoSF = totalMonedas + totalBilletes + totalGastosVales - fondo;
-       document.getElementById('row-19-col-1').textContent = tEfectivoSF.toFixed(2);
+    var fondo = parseFloat(document.getElementById('row-15-col-4').textContent) || 0;
+    var tEfectivoSF = totalMonedas + totalBilletes + totalGastosVales - fondo;
+    document.getElementById('row-19-col-1').textContent = tEfectivoSF.toFixed(2);
 
-       var tEfectivoCF = totalMonedas + totalBilletes + totalGastosVales;
-       document.getElementById('row-21-col-1').textContent = tEfectivoCF.toFixed(2);
+    var tEfectivoCF = totalMonedas + totalBilletes + totalGastosVales;
+    document.getElementById('row-21-col-1').textContent = tEfectivoCF.toFixed(2);
 
-       var tDebito = parseFloat(document.getElementById('row-3-col-4').textContent) || 0;
-       var tCredito = parseFloat(document.getElementById('row-5-col-4').textContent) || 0;
-       var tAmex = parseFloat(document.getElementById('row-7-col-4').textContent) || 0;
-       var tTarjetas = tDebito + tCredito + tAmex;
-       document.getElementById('row-19-col-4').textContent = tTarjetas.toFixed(2);
+    var tDebito = parseFloat(document.getElementById('row-3-col-4').textContent) || 0;
+    var tCredito = parseFloat(document.getElementById('row-5-col-4').textContent) || 0;
+    var tAmex = parseFloat(document.getElementById('row-7-col-4').textContent) || 0;
+    var tTarjetas = tDebito + tCredito + tAmex;
+    document.getElementById('row-19-col-4').textContent = tTarjetas.toFixed(2);
 
-       var tFinal = tEfectivoCF + tTarjetas;
-       document.getElementById('row-21-col-4').textContent = tFinal.toFixed(2);
+    var tFinal = tEfectivoCF + tTarjetas;
+    document.getElementById('row-21-col-4').textContent = tFinal.toFixed(2);
 
-       // Guardar datos en localStorage
-       saveDataToLocalStorage();
+    // Guardar datos en localStorage
+    saveDataToLocalStorage();
 
-       document.getElementById('sugerirFondoBtn').disabled = false;
-       document.getElementById('limpiarTablaBtn').disabled = false;
-       document.getElementById('editarValorBtn').disabled = false;
-       document.getElementById('ajustarCorteBtn').disabled = false;
-       
+    document.getElementById('sugerirFondoBtn').disabled = false;
+    document.getElementById('limpiarTablaBtn').disabled = false;
+    document.getElementById('editarValorBtn').disabled = false;
+    document.getElementById('ajustarCorteBtn').disabled = false;
 
-       // Limpiar datos guardados en localStorage al finalizar correctamente
-       localStorage.removeItem('corteInProgress');
-       verificarDatos();
-   }
+
+    // Limpiar datos guardados en localStorage al finalizar correctamente
+    localStorage.removeItem('corteInProgress');
+    verificarDatos();
+}
 
 let propinasEfectivo = { monedas: {}, billetes: {}, total: 0 };
 let propinasTarjeta = { monedas: {}, billetes: {}, total: 0 };
@@ -540,15 +540,15 @@ function actualizarTotalesFinales() {
     const tFinal = tEfectivoCF + tTarjetas;
     document.getElementById('row-21-col-4').textContent = tFinal.toFixed(2);
 }
-   // Función para limpiar la tabla y localStorage
+// Función para limpiar la tabla y localStorage
 function limpiarTabla() {
     const idsToClear = [
-        'row-2-col-3', 'row-3-col-4', 'row-4-col-2', 'row-4-col-3', 'row-5-col-2', 'row-5-col-3', 
-        'row-5-col-4', 'row-6-col-2', 'row-6-col-3', 'row-7-col-2', 'row-7-col-3', 'row-7-col-4', 
-        'row-8-col-2', 'row-8-col-3', 'row-8-col-5', 'row-9-col-3', 'row-9-col-4', 'row-10-col-2', 
-        'row-10-col-3', 'row-10-col-4', 'row-11-col-2', 'row-11-col-3', 'row-11-col-4', 'row-12-col-2', 
-        'row-12-col-3', 'row-12-col-4', 'row-13-col-2', 'row-13-col-3', 'row-13-col-4', 'row-14-col-2', 
-        'row-14-col-3', 'row-15-col-2', 'row-15-col-3','row-17-col-1','row-17-col-4', 'row-19-col-1', 'row-19-col-4', 'row-21-col-1', 
+        'row-2-col-3', 'row-3-col-4', 'row-4-col-2', 'row-4-col-3', 'row-5-col-2', 'row-5-col-3',
+        'row-5-col-4', 'row-6-col-2', 'row-6-col-3', 'row-7-col-2', 'row-7-col-3', 'row-7-col-4',
+        'row-8-col-2', 'row-8-col-3', 'row-8-col-5', 'row-9-col-3', 'row-9-col-4', 'row-10-col-2',
+        'row-10-col-3', 'row-10-col-4', 'row-11-col-2', 'row-11-col-3', 'row-11-col-4', 'row-12-col-2',
+        'row-12-col-3', 'row-12-col-4', 'row-13-col-2', 'row-13-col-3', 'row-13-col-4', 'row-14-col-2',
+        'row-14-col-3', 'row-15-col-2', 'row-15-col-3', 'row-17-col-1', 'row-17-col-4', 'row-19-col-1', 'row-19-col-4', 'row-21-col-1',
         'row-21-col-4'
     ];
 
@@ -562,7 +562,7 @@ function limpiarTabla() {
     document.getElementById('sugerirFondoBtn').disabled = true;
     document.getElementById('limpiarTablaBtn').disabled = true;
     document.getElementById('ajustarCorteBtn').disabled = true;
-    
+
     localStorage.removeItem('corteInProgress');
 
     verificarDatos();
@@ -617,9 +617,9 @@ async function getGastoValue(promptText, gastoId) {
                 Swal.showValidationMessage('Por favor, ingrese una cantidad válida para los vales');
                 return false;
             }
-            return { 
-                type: 'vales', 
-                amount: valesAmount, 
+            return {
+                type: 'vales',
+                amount: valesAmount,
                 displayText: `Vales = ${valesAmount.toFixed(2)}`,
                 dataType: 'vales'
             };
@@ -630,8 +630,8 @@ async function getGastoValue(promptText, gastoId) {
                 Swal.showValidationMessage('Por favor, ingrese valores válidos para el tipo de moneda y la cantidad');
                 return false;
             }
-            return { 
-                type: 'bolsaMonedas', 
+            return {
+                type: 'bolsaMonedas',
                 amount: monedaAmount,
                 displayText: `${monedaType} = ${monedaAmount.toFixed(2)}`,
                 dataType: 'bolsaMonedas'
@@ -661,7 +661,7 @@ async function getGastoValue(promptText, gastoId) {
         if (swalResult.isConfirmed) {
             allValues.push({ ...swalResult.value, index: currentIndex });
             currentIndex++;
-            
+
             if (currentIndex <= maxIndex) {
                 const nextResult = await Swal.fire({
                     title: '¿Desea agregar otro gasto?',
@@ -669,7 +669,7 @@ async function getGastoValue(promptText, gastoId) {
                     confirmButtonText: 'Sí',
                     cancelButtonText: 'No'
                 });
-                
+
                 if (!nextResult.isConfirmed) {
                     break;
                 }
@@ -752,7 +752,7 @@ function generarSugerencia(items, fondoObjetivo, priorizarMonedas) {
     }, []);
 
     const selectedItems = knapsack(allItems, fondoObjetivo);
-    
+
     // Consolidar los elementos seleccionados
     const consolidatedItems = selectedItems.reduce((acc, item) => {
         const existingItem = acc.find(i => i.denominacion === item.denominacion);
@@ -763,7 +763,7 @@ function generarSugerencia(items, fondoObjetivo, priorizarMonedas) {
         }
         return acc;
     }, []);
-    
+
     return consolidatedItems;
 }
 
@@ -861,138 +861,27 @@ function mostrarTab(tabId) {
 
 // Sugerir fondo
 function sugerirFondo() {
-    // Paso 1: Verificar si hay un valor en propinasTarjeta (row-17-col-4)
-    const propinasTarjetaValor = parseFloat(document.getElementById('row-17-col-4').textContent) || 0;
+    const fondoObjetivo = parseFloat(document.getElementById('row-15-col-4').textContent) || 3000;
 
-    if (propinasTarjetaValor > 0) {
-        // Paso 2: Calcular propinas totales y combinaciones
-        const propinaTotal = propinasEfectivo.total + propinasTarjetaValor;
+    // Obtener las cantidades de monedas, billetes y vales actuales de la tabla
+    const items = [...obtenerMonedas(), ...obtenerBilletes(), ...obtenerVales()];
 
-        // Obtener corte restante para calcular combinaciones
-        const corteRestanteParaPropinas = obtenerCorteRestante();
+    // Generar sugerencia para el fondo
+    const sugerenciaFondo = generarSugerencia(items, fondoObjetivo, priorizarMonedas);
 
-        // Generar combinaciones de propinas usando el algoritmo de mochila
-        const itemsPropinas = generarItemsParaPropinas(corteRestanteParaPropinas);
-        const combinacionPropinas = generarSugerencia(itemsPropinas, propinaTotal, false); // Jerarquía de billetes a monedas
+    // Calcular corte restante después de asignar el fondo
+    const corteRestante = calcularCorteRestante(sugerenciaFondo);
 
-        // Imprimir en la pestaña Propinas
-        const contenidoPropinas = mostrarPropinasEnSugerencia(propinaTotal, combinacionPropinas);
+    // Generar contenido para cada pestaña
+    const contenidoFondo = generarMensaje(sugerenciaFondo); // Detalle del fondo
+    const contenidoCorte = generarMensajeCorte(corteRestante); // Detalle del corte
+    const contenidoPropinas = generarContenidoPropinas(); // Detalle de propinas
 
-        // Paso 3: Calcular sugerencia de fondo usando el corte restante después de propinas
-        const corteRestanteDespuesDePropinas = calcularCorteRestante(combinacionPropinas);
-        const fondoObjetivo = parseFloat(document.getElementById('row-15-col-4').textContent) || 3000;
-        const itemsFondo = [...obtenerVales(), ...obtenerMonedas(), ...obtenerBilletes()]; // Asegurarnos de que itemsFondo sea un array
-        const sugerenciaFondo = generarSugerencia(itemsFondo, fondoObjetivo, true); // Jerarquía de vales, monedas, billetes
-
-        // Imprimir en la pestaña Fondo
-        const contenidoFondo = generarMensaje(sugerenciaFondo);
-
-        // Paso 4: Calcular el nuevo corte restante después del fondo
-        const nuevoCorteRestante = calcularCorteRestante(sugerenciaFondo);
-
-        // Imprimir en la pestaña Corte
-        const contenidoCorte = generarMensajeCorte(nuevoCorteRestante);
-
-        // Mostrar el contenido en las pestañas de SweetAlert
-        mostrarContenidoEnPestanas(contenidoPropinas, contenidoFondo, contenidoCorte);
-    } else {
-        // Paso Extra: No hay valor en propinasTarjeta, saltar al cálculo de fondo directamente
-        const fondoObjetivo = parseFloat(document.getElementById('row-15-col-4').textContent) || 3000;
-
-        // Obtener las cantidades de monedas y billetes actuales de la tabla
-        const monedas = obtenerMonedas();
-        const billetes = obtenerBilletes();
-        const vales = obtenerVales();
-        const itemsFondo = [...vales, ...monedas, ...billetes]; // Asegurarnos de que itemsFondo sea un array
-
-        // Generar la sugerencia de fondo
-        const sugerenciaFondo = generarSugerencia(itemsFondo, fondoObjetivo, true); // Jerarquía de vales, monedas, billetes
-
-        // Imprimir en la pestaña Fondo
-        const contenidoFondo = generarMensaje(sugerenciaFondo);
-
-        // Calcular el nuevo corte restante después del fondo
-        const nuevoCorteRestante = calcularCorteRestante(sugerenciaFondo);
-
-        // Imprimir en la pestaña Corte
-        const contenidoCorte = generarMensajeCorte(nuevoCorteRestante);
-
-        // Imprimir solo propinas en efectivo en la pestaña Propinas
-        const contenidoPropinas = mostrarPropinasEnSugerencia(propinasEfectivo.total, []);
-
-        // Mostrar el contenido en las pestañas de SweetAlert
-        mostrarContenidoEnPestanas(contenidoPropinas, contenidoFondo, contenidoCorte);
-    }
-}
-
-function obtenerCorteRestante() {
-    // Obtener las cantidades actuales de monedas, billetes y vales
-    const monedas = obtenerMonedas();
-    const billetes = obtenerBilletes();
-    const vales  = obtenerVales();
-    return [...vales,...monedas, ...billetes];
-}
-
-function generarItemsParaPropinas(corteRestante) {
-    const itemsPropinas = corteRestante.map(denominacion => {
-        return { denominacion: parseFloat(denominacion), cantidad: corteRestante[denominacion] };
-    });
-
-    Object.keys(propinasEfectivo.monedas).forEach(key => {
-        itemsPropinas.push({ denominacion: parseFloat(key), cantidad: propinasEfectivo.monedas[key] });
-    });
-    Object.keys(propinasEfectivo.billetes).forEach(key => {
-        itemsPropinas.push({ denominacion: parseFloat(key), cantidad: propinasEfectivo.billetes[key] });
-    });
-
-    return itemsPropinas;
-}
-
-function obtenerMonedas() {
-    return [
-        { denominacion: 0.5, cantidad: parseInt(document.getElementById('row-4-col-2').textContent) || 0 },
-        { denominacion: 1, cantidad: parseInt(document.getElementById('row-5-col-2').textContent) || 0 },
-        { denominacion: 2, cantidad: parseInt(document.getElementById('row-6-col-2').textContent) || 0 },
-        { denominacion: 5, cantidad: parseInt(document.getElementById('row-7-col-2').textContent) || 0 },
-        { denominacion: 10, cantidad: parseInt(document.getElementById('row-8-col-2').textContent) || 0 }
-    ];
-}
-
-function obtenerBilletes() {
-    return [
-        { denominacion: 20, cantidad: parseInt(document.getElementById('row-10-col-2').textContent) || 0 },
-        { denominacion: 50, cantidad: parseInt(document.getElementById('row-11-col-2').textContent) || 0 },
-        { denominacion: 100, cantidad: parseInt(document.getElementById('row-12-col-2').textContent) || 0 },
-        { denominacion: 200, cantidad: parseInt(document.getElementById('row-13-col-2').textContent) || 0 },
-        { denominacion: 500, cantidad: parseInt(document.getElementById('row-14-col-2').textContent) || 0 },
-        { denominacion: 1000, cantidad: parseInt(document.getElementById('row-15-col-2').textContent) || 0 }
-    ];
-}
-
-function obtenerVales() {
-    return [
-        { denominacion: document.querySelectorAll('td[id="row-9-col-4"], td[id="row-10-col-4"], td[id="row-11-col-4"],td[id="row-12-col-4"],td[id="row-13-col-4"]').textContent || 0, cantidad: 1 }
-    ];
-}
-
-function mostrarContenidoEnPestanas(contenidoPropinas, contenidoFondo, contenidoCorte) {
-    const contenidoPestanas = `
-        <div>
-            <div id="tab-container" style="text-align: center; margin-bottom: 10px;">
-                <button id="tab-1" class="swal2-styled tab-btn" onclick="mostrarTab('tab1')">Fondo</button>
-                <button id="tab-2" class="swal2-styled tab-btn" onclick="mostrarTab('tab2')">Corte</button>
-                <button id="tab-3" class="swal2-styled tab-btn" onclick="mostrarTab('tab3')">Propinas</button>
-            </div>
-            <div id="tab1" class="tab-content">${contenidoFondo}</div>
-            <div id="tab2" class="tab-content" style="display:none;">${contenidoCorte}</div>
-            <div id="tab3" class="tab-content" style="display:none;">${contenidoPropinas}</div>
-        </div>
-    `;
-
+    // Mostrar en un modal con pestañas
     Swal.fire({
-        title: 'Sugerencia de Fondo',
-        html: contenidoPestanas,
-        icon: 'info',
+        title: 'Sugerencia de Corte',
+        html: crearContenidoPestanas(contenidoFondo, contenidoCorte, contenidoPropinas),
+        width: '600px',
         showCancelButton: true,
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Reiniciar',
@@ -1010,7 +899,27 @@ function mostrarContenidoEnPestanas(contenidoPropinas, contenidoFondo, contenido
     mostrarTab('tab1'); // Mostrar la pestaña de Fondo por defecto
 }
 
+function crearContenidoPestanas(contenidoFondo, contenidoCorte, contenidoPropinas) {
+    return `
+        <div>
+            <div id="tab-container" style="text-align: center; margin-bottom: 10px;">
+                <button id="tab-1" class="swal2-styled tab-btn" onclick="mostrarTab('tab1')">Fondo</button>
+                <button id="tab-2" class="swal2-styled tab-btn" onclick="mostrarTab('tab2')">Corte</button>
+                <button id="tab-3" class="swal2-styled tab-btn" onclick="mostrarTab('tab3')">Propinas</button>
+            </div>
+            <div id="tab1" class="tab-content">${contenidoFondo}</div>
+            <div id="tab2" class="tab-content" style="display:none;">${contenidoCorte}</div>
+            <div id="tab3" class="tab-content" style="display:none;">${contenidoPropinas}</div>
+        </div>
+    `;
+}
 
+function mostrarTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+    });
+    document.getElementById(tabId).style.display = 'block';
+}
 
 // funciones para el botin editar valor
 let editTimeout;
@@ -1033,8 +942,8 @@ function habilitarEdicion() {
                 title: 'Aviso',
                 text: 'Cerrando la edición de valores, pulsa el botón "Continuar" si deseas seguir editando',
                 confirmButtonText: 'Continuar',
-                timerProgressBar:true,
-                timer:2000,
+                timerProgressBar: true,
+                timer: 2000,
             }).then(result => {
                 if (result.isConfirmed) {
                     habilitarEdicion();
@@ -1103,7 +1012,7 @@ function editarCelda(event) {
                     text: `Ingresa el nuevo valor para ${tipo}`,
                     input: 'number',
                     inputAttributes: {
-                      'aria-label': 'Nuevo valor'
+                        'aria-label': 'Nuevo valor'
                     },
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
@@ -1187,9 +1096,9 @@ async function editarGastoCelda(promptText, gastoId) {
                 Swal.showValidationMessage('Por favor, ingrese una cantidad válida para los vales');
                 return false;
             }
-            return { 
-                type: 'vales', 
-                amount: valesAmount, 
+            return {
+                type: 'vales',
+                amount: valesAmount,
                 displayText: `Vales = ${valesAmount.toFixed(2)}`,
                 dataType: 'vales'
             };
@@ -1200,8 +1109,8 @@ async function editarGastoCelda(promptText, gastoId) {
                 Swal.showValidationMessage('Por favor, ingrese valores válidos para el tipo de moneda y la cantidad');
                 return false;
             }
-            return { 
-                type: 'bolsaMonedas', 
+            return {
+                type: 'bolsaMonedas',
                 amount: monedaAmount,
                 displayText: `${monedaType} = ${monedaAmount.toFixed(2)}`,
                 dataType: 'bolsaMonedas'
@@ -1312,7 +1221,7 @@ function iniciarTemporizador() {
             title: 'Aviso',
             text: 'Cerrado la edición de valores, pulsa el botón "Continuar" si deseas seguir editando',
             confirmButtonText: 'Continuar',
-            timerProgressBar:true,
+            timerProgressBar: true,
             timer: 1500
         }).then(result => {
             if (result.isConfirmed) {
@@ -1377,8 +1286,13 @@ async function ajustarCorte() {
 }
 
 function restarDeTotal(formValues) {
-    const monedas = formValues.monedas;
-    const billetes = formValues.billetes;
+    if (!formValues || typeof formValues !== 'object') {
+        console.error('restarDeTotal: formValues no es un objeto válido.', formValues);
+        return;
+    }
+
+    const monedas = formValues.monedas || {};
+    const billetes = formValues.billetes || {};
 
     const denominaciones = {
         'monedas': {
@@ -1398,15 +1312,17 @@ function restarDeTotal(formValues) {
     };
 
     for (const [key, value] of Object.entries(monedas)) {
+        if (!denominaciones.monedas[key]) continue;
         const id = denominaciones.monedas[key];
         const currentVal = parseInt(document.getElementById(id).textContent) || 0;
-        document.getElementById(id).textContent = currentVal - value;
+        document.getElementById(id).textContent = currentVal - (parseInt(value) || 0);
     }
 
     for (const [key, value] of Object.entries(billetes)) {
+        if (!denominaciones.billetes[key]) continue;
         const id = denominaciones.billetes[key];
         const currentVal = parseInt(document.getElementById(id).textContent) || 0;
-        document.getElementById(id).textContent = currentVal - value;
+        document.getElementById(id).textContent = currentVal - (parseInt(value) || 0);
     }
 
     actualizarTotales();
@@ -1458,7 +1374,7 @@ async function editarFondo() {
     if (nuevoFondo) {
         // Actualizar la celda con el nuevo valor
         document.getElementById('row-15-col-4').textContent = parseFloat(nuevoFondo).toFixed(2);
-        
+
         // Actualizar los totales relacionados
         actualizarTotales();
 
@@ -1477,4 +1393,35 @@ async function editarFondo() {
             showConfirmButton: false
         });
     }
+}
+
+function obtenerMonedas() {
+    return [
+        { denominacion: 0.5, cantidad: parseInt(document.getElementById('row-4-col-2').textContent) || 0 },
+        { denominacion: 1, cantidad: parseInt(document.getElementById('row-5-col-2').textContent) || 0 },
+        { denominacion: 2, cantidad: parseInt(document.getElementById('row-6-col-2').textContent) || 0 },
+        { denominacion: 5, cantidad: parseInt(document.getElementById('row-7-col-2').textContent) || 0 },
+        { denominacion: 10, cantidad: parseInt(document.getElementById('row-8-col-2').textContent) || 0 }
+    ];
+}
+
+function obtenerBilletes() {
+    return [
+        { denominacion: 20, cantidad: parseInt(document.getElementById('row-10-col-2').textContent) || 0 },
+        { denominacion: 50, cantidad: parseInt(document.getElementById('row-11-col-2').textContent) || 0 },
+        { denominacion: 100, cantidad: parseInt(document.getElementById('row-12-col-2').textContent) || 0 },
+        { denominacion: 200, cantidad: parseInt(document.getElementById('row-13-col-2').textContent) || 0 },
+        { denominacion: 500, cantidad: parseInt(document.getElementById('row-14-col-2').textContent) || 0 },
+        { denominacion: 1000, cantidad: parseInt(document.getElementById('row-15-col-2').textContent) || 0 }
+    ];
+}
+
+function obtenerVales() {
+    const valesCeldas = [
+        'row-9-col-4', 'row-10-col-4', 'row-11-col-4', 'row-12-col-4', 'row-13-col-4'
+    ];
+    return valesCeldas.map(id => {
+        const valor = parseFloat(document.getElementById(id)?.textContent.split('=')[1]) || 0;
+        return { denominacion: 'vales', cantidad: valor };
+    }).filter(item => item.cantidad > 0);
 }
