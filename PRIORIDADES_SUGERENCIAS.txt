@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+# Visualización de Prioridades de Sugerencias
+
+echo "════════════════════════════════════════════════════════════════════"
+echo "                    COMPARATIVA DE PRIORIDADES                       "
+echo "════════════════════════════════════════════════════════════════════"
+echo ""
+
+# Tabla de denominaciones con prioridades
+cat << 'EOF'
+
+╔════════════════════════════════════════════════════════════════════╗
+║            DENOMINACIÓN              │ FONDO │ CORTE │ PROPINA    ║
+╠════════════════════════════════════════════════════════════════════╣
+║ ¢50 (Moneda pequeña)                 │   1   │   5   │    ✗       ║
+║ $1 (Moneda)                          │   2   │   4   │    ✗       ║
+║ $2 (Moneda)                          │   3   │   3   │    ✗       ║
+║ $5 (Moneda)                          │   4   │   2   │    ✗       ║
+║ $10 (Moneda)                         │   5   │   1   │    ✗       ║
+│────────────────────────────────────────────────────────────────────│
+║ $20 (Billete pequeño)                │   6   │   2   │    ✗       ║
+║ $50 (Billete mediano)                │   7   │   3   │    1       ║
+│────────────────────────────────────────────────────────────────────│
+║ $100 (Billete grande)                │   8   │   1   │    2       ║
+║ $200 (Billete grande)                │   9   │   1   │    2       ║
+║ $500 (Billete grande)                │  10   │   1   │    3       ║
+║ $1000 (Billete muy grande)           │  11   │   1   │    4       ║
+╚════════════════════════════════════════════════════════════════════╝
+
+LEYENDA:
+  1 = Máxima prioridad    4 = Media
+  2 = Alta                5 = Baja
+  3 = Media-Alta          ✗ = No se considera
+
+════════════════════════════════════════════════════════════════════
+
+ALGORITMO POR SUGERENCIA:
+
+1. FONDO (generarSugerenciaFondo):
+   ├─ Ordena ASCENDENTE por denominación
+   ├─ Usa monedas y billetes pequeños primero
+   └─ Objetivo: Mucho cambio para transacciones diarias
+
+2. CORTE (generarSugerenciaCorte):
+   ├─ Ordena DESCENDENTE por denominación
+   ├─ Usa billetes grandes primero
+   └─ Objetivo: Facilitación de depósito/pago
+
+3. PROPINA (generarSugerenciaPropina):
+   ├─ Filtra SOLO billetes >= $50
+   ├─ Ordena DESCENDENTE
+   └─ Objetivo: Fácil entrega de propina
+
+════════════════════════════════════════════════════════════════════
+
+EJEMPLO DE EJECUCIÓN REAL:
+
+Inventario total disponible:
+  ¢50: 10 unidades
+  $1:  20 unidades
+  $2:   5 unidades
+  $5:   8 unidades
+  $10: 12 unidades
+  $20:  6 unidades
+  $50:  4 unidades
+  $100: 8 unidades
+  $200: 3 unidades
+  $500: 2 unidades
+  $1000: 1 unidad
+
+Fondo objetivo: $175.00
+
+PASO 1: SUGERENCIA DE FONDO
+  Resultado esperado:
+    ¢50 x 10 = $5.00
+    $1  x 20 = $20.00
+    $5  x  8 = $40.00
+    $10 x  4 = $40.00
+    $20 x  3 = $60.00
+    ──────────────────
+    Total:   $165.00 (aproximado a $175)
+
+INVENTARIO RESTANTE:
+  $10: 8 unidades (12-4)
+  $20: 3 unidades (6-3)
+  $50: 4 unidades (sin cambios)
+  $100: 8 unidades (sin cambios)
+  $200: 3 unidades (sin cambios)
+  $500: 2 unidades (sin cambios)
+  $1000: 1 unidad (sin cambios)
+
+PASO 2: SUGERENCIA DE CORTE (con inventario restante)
+  Corte objetivo: $3000.00 (ejemplo)
+  
+  Resultado esperado:
+    $1000 x 1 = $1000.00
+    $500  x 2 = $1000.00
+    $200  x 3 = $600.00
+    $100  x 4 = $400.00
+    ──────────────────────
+    Total:    $3000.00
+
+INVENTARIO RESTANTE (después de corte):
+  $10: 8 unidades
+  $20: 3 unidades
+  $50: 4 unidades
+  $100: 4 unidades (8-4)
+  $200: 0 unidades (3-3)
+  $500: 0 unidades (2-2)
+  $1000: 0 unidades (1-1)
+
+PASO 3: SUGERENCIA DE PROPINA (con inventario restante)
+  Propina objetivo: $250.00 (ejemplo)
+  
+  Resultado esperado:
+    $100 x 2 = $200.00
+    $50  x 1 = $50.00
+    ─────────────────────
+    Total:   $250.00
+
+════════════════════════════════════════════════════════════════════
+
+VENTAJAS DE ESTE SISTEMA:
+
+✅ Separación clara de conceptos
+✅ Cada sugerencia tiene objetivo específico
+✅ Calcula inventario restante entre pasos
+✅ Evita redundancias y conflictos
+✅ Fácil de explicar al usuario
+✅ Escalable para futuras mejoras
+✅ Documentado y mantenible
+
+════════════════════════════════════════════════════════════════════
+EOF
