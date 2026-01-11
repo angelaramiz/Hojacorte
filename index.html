@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Registro de Caja</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: center;
+        }
+        .divider {
+            border-right: 2px solid black;
+        }
+        .bottom-border {
+            border-bottom: 2px solid black;
+        }
+        .no-border-bottom {
+            border-bottom: none;
+        }
+        .currency {
+            width: 50px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .swal2-styled {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .swal2-styled:focus {
+            box-shadow: 0 0 3px 2px rgba(0, 123, 255, 0.5);
+        }
+        .tab-btn {
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        .tab-content {
+            margin-top: 10px;
+        }
+        #row-15-col-4 {
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        #row-15-col-4:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <table>
+        <tr>
+            <th colspan="5" class="divider">Hoja De Corte</th>
+        </tr>
+        <tr>
+            <th colspan="3" class="divider">Efectivo</th>
+            <th colspan="2">Tarjetas</th>
+        </tr>
+        <tr>
+            <th colspan="2">Monedas  =</th>
+            <th colspan="1" class="divider" id="row-2-col-3"></th>
+            <td colspan="2" id="row-2-col-4">T.Débito</td>
+        </tr>
+        <tr>
+            <th class="currency">$</th>
+            <th class="currency">Cat</th>
+            <th class="currency">Ttl</th>
+            <td colspan="2" rowspan="1" id="row-3-col-4"></td>
+        </tr>
+        <tr>
+            <td>¢50</td>
+            <td id="row-4-col-2"></td>
+            <td class="divider" id="row-4-col-3"></td>
+            <td colspan="2" id="row-4-col-4">T.Crédito</td>
+        </tr>
+        <tr>
+            <td>$1</td>
+            <td id="row-5-col-2"></td>
+            <td class="divider" id="row-5-col-3"></td>
+            <td colspan="2" rowspan="1" id="row-5-col-4"></td>
+        </tr>
+        <tr>
+            <td>$2</td>
+            <td id="row-6-col-2"></td>
+            <td class="divider" id="row-6-col-3"></td>
+            <td colspan="2" id="row-6-col-4">T.Amex</td>
+        </tr>
+        <tr>
+            <td>$5</td>
+            <td id="row-7-col-2"></td>
+            <td class="divider" id="row-7-col-3"></td>
+            <td colspan="2" rowspan="1" id="row-7-col-4"></td>
+        </tr>
+        <tr>
+            <td>$10</td>
+            <td id="row-8-col-2"></td>
+            <td class="divider" id="row-8-col-3"></td>
+            <th class="currency" colspan="0" rowspan="1" id="row-8-col-4">Vales   =</th>
+            <td class="currency" colspan="1" rowspan="1" id="row-8-col-5"></td>
+        </tr>
+        <tr>
+            <th colspan="2">Billetes   =</th>
+            <th colspan="1" class="divider" id="row-9-col-3"></th>
+            <td colspan="2" rowspan="1" id="row-9-col-4"></td>
+        </tr>
+        <tr>
+            <td>$20</td>
+            <td id="row-10-col-2"></td>
+            <td class="divider" id="row-10-col-3"></td>
+            <td colspan="2" rowspan="1" id="row-10-col-4"></td>
+        </tr>
+        <tr>
+            <td>$50</td>
+            <td id="row-11-col-2"></td>
+            <td class="divider" id="row-11-col-3"></td>
+            <td colspan="2" rowspan="1" id="row-11-col-4"></td>
+        </tr>
+        <tr>
+            <td>$100</td>
+            <td id="row-12-col-2"></td>
+            <td class="divider" id="row-12-col-3"></td>
+            <td colspan="2" rowspan="1" id="row-12-col-4"></td>
+        </tr>
+        <tr>
+            <td>$200</td>
+            <td id="row-13-col-2"></td>
+            <td class="divider" id="row-13-col-3"></td>
+            <td colspan="2" rowspan="1" id="row-13-col-4"></td>
+        </tr>
+        <tr>
+            <td>$500</td>
+            <td id="row-14-col-2"></td>
+            <td class="divider" id="row-14-col-3"></td>
+            <td colspan="2" rowspan="1">Fondo</td>
+        </tr>
+        <tr>
+            <td>$1,000</td>
+            <td id="row-15-col-2"></td>
+            <td class="divider" id="row-15-col-3"></td>
+            <td id="row-15-col-4" colspan="2" rowspan="1">0</td>
+        </tr>
+        <tr>
+            <th colspan="3" class="divider bottom-border">PropinaEfectivo</th>
+            <th colspan="2" class="bottom-border">PropinaTarjeta</th>
+        </tr>
+        <tr>
+            <td colspan="3" rowspan="1" id="row-17-col-1"></td>
+            <td colspan="2" rowspan="1" id="row-17-col-4"></td>
+        </tr>
+        <tr>
+            <th colspan="3" class="divider bottom-border">T.Efectivo+Vales,s/F</th>
+            <th colspan="2" class="bottom-border">T.tarjetas</th>
+        </tr>
+        <tr>
+            <td colspan="3" rowspan="1" id="row-19-col-1"></td>
+            <td colspan="2" rowspan="1" id="row-19-col-4"></td>
+        </tr>
+        <tr>
+            <th colspan="3" class="divider no-border-bottom">T.Efectivo+Vales,c/F</th>
+            <th colspan="2" class="no-border-bottom">T.Final</th>
+        </tr>
+        <tr>
+            <td colspan="3" rowspan="1" id="row-21-col-1"></td>
+            <td colspan="2" rowspan="1" id="row-21-col-4"></td>
+        </tr>
+    </table>
+    <div class="button-container">
+        <button class="swal2-styled" onclick="iniciarCorte()">Iniciar Corte</button>
+        <button class="swal2-styled" id="sugerirFondoBtn" onclick="sugerirFondo()" disabled >Sugerir Fondo</button>
+        <button class="swal2-styled" id="limpiarTablaBtn" onclick="limpiarTabla()" disabled>Limpiar Tabla</button>
+        <button class="swal2-styled" id="editarValorBtn" onclick="habilitarEdicion()">Editar Valor</button>
+        <button class="swal2-styled" id="ajustarCorteBtn"
+          onclick="ajustarCorte()" disabled >Ajustar Corte</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+</body>
+</html>
