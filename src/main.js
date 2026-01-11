@@ -228,23 +228,29 @@ function sugerirFondo() {
     const fondoObjetivo = parseFloat(document.getElementById(CONFIG.elementos.fondoCell).textContent) || CONFIG.fondoDefault;
     const items = [...obtenerMonedas(), ...obtenerBilletes(), ...obtenerVales()];
     
-    // Generar las tres sugerencias con prioridades específicas
+    // PASO 1: Generar SUGERENCIA DE FONDO
     const sugerenciaFondo = generarSugerenciaFondo(items, fondoObjetivo);
     
     // Calcular items restantes después del fondo
-    const itemsRestantes = items.map(item => ({
+    const itemsRestantesDespuesFondo = items.map(item => ({
         ...item,
         cantidad: item.cantidad - (sugerenciaFondo.find(s => s.denominacion === item.denominacion)?.cantidad || 0)
     })).filter(item => item.cantidad > 0);
     
-    // Calcular corte restante
+    // PASO 2: Generar SUGERENCIA DE CORTE (con inventario restante después del fondo)
     const totalEfectivo = parseFloat(document.getElementById(CONFIG.elementos.totalEfectivoCFCell).textContent) || 0;
-    const corteObjetivo = totalEfectivo - fondoObjetivo;
-    const sugerenciaCorte = generarSugerenciaCorte(itemsRestantes, corteObjetivo);
+    const corteObjetivo = Math.max(0, totalEfectivo - fondoObjetivo);
+    const sugerenciaCorte = generarSugerenciaCorte(itemsRestantesDespuesFondo, corteObjetivo);
     
-    // Propina sugerida (usar billetes grandes a medianos)
+    // Calcular items restantes después del corte
+    const itemsRestantesDespuesCorte = itemsRestantesDespuesFondo.map(item => ({
+        ...item,
+        cantidad: item.cantidad - (sugerenciaCorte.find(s => s.denominacion === item.denominacion)?.cantidad || 0)
+    })).filter(item => item.cantidad > 0);
+    
+    // PASO 3: Generar SUGERENCIA DE PROPINA (con inventario restante después de fondo y corte)
     const totalPropinas = propinasEfectivo.total + propinasTarjeta.total;
-    const sugerenciaPropina = generarSugerenciaPropina(itemsRestantes, totalPropinas);
+    const sugerenciaPropina = generarSugerenciaPropina(itemsRestantesDespuesCorte, totalPropinas);
 
     const contenidoFondo = generarMensajeFondo(sugerenciaFondo, fondoObjetivo);
     const contenidoCorte = generarMensajeCorteRecomendado(sugerenciaCorte, corteObjetivo);
