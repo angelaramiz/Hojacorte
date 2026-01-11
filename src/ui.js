@@ -340,6 +340,112 @@ export function generarContenidoPropinas() {
 }
 
 /**
+ * Genera mensaje de sugerencia de FONDO
+ */
+export function generarMensajeFondo(sugerencia, fondoObjetivo) {
+    let mensaje = `<strong>Sugerencia para FONDO: $${fondoObjetivo.toFixed(2)}</strong><br><br>`;
+    let total = 0;
+    let totalMonedas = 0;
+    let totalBilletes = 0;
+
+    let monedas = sugerencia.filter(item => item.denominacion < 20);
+    let billetes = sugerencia.filter(item => item.denominacion >= 20);
+
+    if (monedas.length > 0) {
+        mensaje += '<strong>Monedas (Prioridad):</strong><br>';
+        monedas.forEach(item => {
+            let denominacion = item.denominacion % 1 === 0 ? item.denominacion.toFixed(0) : item.denominacion.toFixed(2);
+            let subtotal = item.denominacion * item.cantidad;
+            totalMonedas += subtotal;
+            mensaje += `$${denominacion} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>`;
+        });
+    }
+
+    if (billetes.length > 0) {
+        mensaje += '<strong>Billetes Pequeños:</strong><br>';
+        billetes.forEach(item => {
+            let denominacion = item.denominacion % 1 === 0 ? item.denominacion.toFixed(0) : item.denominacion.toFixed(2);
+            let subtotal = item.denominacion * item.cantidad;
+            totalBilletes += subtotal;
+            mensaje += `$${denominacion} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>`;
+        });
+    }
+
+    total = totalMonedas + totalBilletes;
+    mensaje += `<br><strong>Total Fondo: $${total.toFixed(2)}</strong>`;
+
+    return mensaje;
+}
+
+/**
+ * Genera mensaje de sugerencia de CORTE (después de restar fondo)
+ */
+export function generarMensajeCorteRecomendado(sugerencia, corteObjetivo) {
+    let mensaje = `<strong>Sugerencia para CORTE: $${corteObjetivo.toFixed(2)}</strong><br><br>`;
+    let total = 0;
+    let totalMonedas = 0;
+    let totalBilletes = 0;
+
+    let monedas = sugerencia.filter(item => item.denominacion < 20);
+    let billetes = sugerencia.filter(item => item.denominacion >= 20);
+
+    if (billetes.length > 0) {
+        mensaje += '<strong>Billetes (Prioridad):</strong><br>';
+        billetes.forEach(item => {
+            let denominacion = item.denominacion % 1 === 0 ? item.denominacion.toFixed(0) : item.denominacion.toFixed(2);
+            let subtotal = item.denominacion * item.cantidad;
+            totalBilletes += subtotal;
+            mensaje += `$${denominacion} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>`;
+        });
+    }
+
+    if (monedas.length > 0) {
+        mensaje += '<strong>Monedas (Complemento):</strong><br>';
+        monedas.forEach(item => {
+            let denominacion = item.denominacion % 1 === 0 ? item.denominacion.toFixed(0) : item.denominacion.toFixed(2);
+            let subtotal = item.denominacion * item.cantidad;
+            totalMonedas += subtotal;
+            mensaje += `$${denominacion} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>`;
+        });
+    }
+
+    total = totalMonedas + totalBilletes;
+    mensaje += `<br><strong>Total Corte: $${total.toFixed(2)}</strong>`;
+
+    return mensaje;
+}
+
+/**
+ * Genera mensaje de sugerencia de PROPINA
+ */
+export function generarMensajePropina(sugerencia, propinaObjetivo) {
+    let mensaje = `<strong>Sugerencia para PROPINA: $${propinaObjetivo.toFixed(2)}</strong><br><br>`;
+    
+    if (sugerencia.length === 0) {
+        mensaje += '<em>No hay propina registrada o insuficientes billetes grandes disponibles.</em><br>';
+        mensaje += `<strong>Total: $0.00</strong>`;
+        return mensaje;
+    }
+
+    let total = 0;
+    let billetes = sugerencia.filter(item => item.denominacion >= 50);
+
+    if (billetes.length > 0) {
+        mensaje += '<strong>Billetes Recomendados:</strong><br>';
+        billetes.forEach(item => {
+            let denominacion = item.denominacion % 1 === 0 ? item.denominacion.toFixed(0) : item.denominacion.toFixed(2);
+            let subtotal = item.denominacion * item.cantidad;
+            total += subtotal;
+            mensaje += `$${denominacion} x ${item.cantidad} = $${subtotal.toFixed(2)}<br>`;
+        });
+    }
+
+    mensaje += `<br><strong>Total Propina: $${total.toFixed(2)}</strong>`;
+
+    return mensaje;
+}
+
+/**
  * Genera mensaje de sugerencia
  */
 export function generarMensaje(sugerencia) {

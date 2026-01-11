@@ -4,191 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tabla de Registro de Caja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            font-family: Arial, sans-serif;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            text-align: center;
-        }
-        .divider {
-            border-right: 2px solid black;
-        }
-        .bottom-border {
-            border-bottom: 2px solid black;
-        }
-        .no-border-bottom {
-            border-bottom: none;
-        }
-        .currency {
-            width: 50px;
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .swal2-styled {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-        }
-        .swal2-styled:focus {
-            box-shadow: 0 0 3px 2px rgba(0, 123, 255, 0.5);
-        }
-        .tab-btn {
-            margin-right: 5px;
-            cursor: pointer;
-        }
-        .tab-content {
-            margin-top: 10px;
-        }
         #row-15-col-4 {
             cursor: pointer;
-            background-color: #f9f9f9;
             transition: background-color 0.3s;
         }
-
         #row-15-col-4:hover {
-            background-color: #e0e0e0;
+            @apply bg-gray-200;
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
-<body>
-    <table>
-        <tr>
-            <th colspan="5" class="divider">Hoja De Corte</th>
-        </tr>
-        <tr>
-            <th colspan="3" class="divider">Efectivo</th>
-            <th colspan="2">Tarjetas</th>
-        </tr>
-        <tr>
-            <th colspan="2">Monedas  =</th>
-            <th colspan="1" class="divider" id="row-2-col-3"></th>
-            <td colspan="2" id="row-2-col-4">T.Débito</td>
-        </tr>
-        <tr>
-            <th class="currency">$</th>
-            <th class="currency">Cat</th>
-            <th class="currency">Ttl</th>
-            <td colspan="2" rowspan="1" id="row-3-col-4"></td>
-        </tr>
-        <tr>
-            <td>¢50</td>
-            <td id="row-4-col-2"></td>
-            <td class="divider" id="row-4-col-3"></td>
-            <td colspan="2" id="row-4-col-4">T.Crédito</td>
-        </tr>
-        <tr>
-            <td>$1</td>
-            <td id="row-5-col-2"></td>
-            <td class="divider" id="row-5-col-3"></td>
-            <td colspan="2" rowspan="1" id="row-5-col-4"></td>
-        </tr>
-        <tr>
-            <td>$2</td>
-            <td id="row-6-col-2"></td>
-            <td class="divider" id="row-6-col-3"></td>
-            <td colspan="2" id="row-6-col-4">T.Amex</td>
-        </tr>
-        <tr>
-            <td>$5</td>
-            <td id="row-7-col-2"></td>
-            <td class="divider" id="row-7-col-3"></td>
-            <td colspan="2" rowspan="1" id="row-7-col-4"></td>
-        </tr>
-        <tr>
-            <td>$10</td>
-            <td id="row-8-col-2"></td>
-            <td class="divider" id="row-8-col-3"></td>
-            <th class="currency" colspan="0" rowspan="1" id="row-8-col-4">Vales   =</th>
-            <td class="currency" colspan="1" rowspan="1" id="row-8-col-5"></td>
-        </tr>
-        <tr>
-            <th colspan="2">Billetes   =</th>
-            <th colspan="1" class="divider" id="row-9-col-3"></th>
-            <td colspan="2" rowspan="1" id="row-9-col-4"></td>
-        </tr>
-        <tr>
-            <td>$20</td>
-            <td id="row-10-col-2"></td>
-            <td class="divider" id="row-10-col-3"></td>
-            <td colspan="2" rowspan="1" id="row-10-col-4"></td>
-        </tr>
-        <tr>
-            <td>$50</td>
-            <td id="row-11-col-2"></td>
-            <td class="divider" id="row-11-col-3"></td>
-            <td colspan="2" rowspan="1" id="row-11-col-4"></td>
-        </tr>
-        <tr>
-            <td>$100</td>
-            <td id="row-12-col-2"></td>
-            <td class="divider" id="row-12-col-3"></td>
-            <td colspan="2" rowspan="1" id="row-12-col-4"></td>
-        </tr>
-        <tr>
-            <td>$200</td>
-            <td id="row-13-col-2"></td>
-            <td class="divider" id="row-13-col-3"></td>
-            <td colspan="2" rowspan="1" id="row-13-col-4"></td>
-        </tr>
-        <tr>
-            <td>$500</td>
-            <td id="row-14-col-2"></td>
-            <td class="divider" id="row-14-col-3"></td>
-            <td colspan="2" rowspan="1">Fondo</td>
-        </tr>
-        <tr>
-            <td>$1,000</td>
-            <td id="row-15-col-2"></td>
-            <td class="divider" id="row-15-col-3"></td>
-            <td id="row-15-col-4" colspan="2" rowspan="1">0</td>
-        </tr>
-        <tr>
-            <th colspan="3" class="divider bottom-border">PropinaEfectivo</th>
-            <th colspan="2" class="bottom-border">PropinaTarjeta</th>
-        </tr>
-        <tr>
-            <td colspan="3" rowspan="1" id="row-17-col-1"></td>
-            <td colspan="2" rowspan="1" id="row-17-col-4"></td>
-        </tr>
-        <tr>
-            <th colspan="3" class="divider bottom-border">T.Efectivo+Vales,s/F</th>
-            <th colspan="2" class="bottom-border">T.tarjetas</th>
-        </tr>
-        <tr>
-            <td colspan="3" rowspan="1" id="row-19-col-1"></td>
-            <td colspan="2" rowspan="1" id="row-19-col-4"></td>
-        </tr>
-        <tr>
-            <th colspan="3" class="divider no-border-bottom">T.Efectivo+Vales,c/F</th>
-            <th colspan="2" class="no-border-bottom">T.Final</th>
-        </tr>
-        <tr>
-            <td colspan="3" rowspan="1" id="row-21-col-1"></td>
-            <td colspan="2" rowspan="1" id="row-21-col-4"></td>
-        </tr>
-    </table>
-    <div class="button-container">
-        <button class="swal2-styled" onclick="iniciarCorte()">Iniciar Corte</button>
-        <button class="swal2-styled" id="sugerirFondoBtn" onclick="sugerirFondo()" disabled >Sugerir Fondo</button>
-        <button class="swal2-styled" id="limpiarTablaBtn" onclick="limpiarTabla()" disabled>Limpiar Tabla</button>
-        <button class="swal2-styled" id="editarValorBtn" onclick="habilitarEdicion()">Editar Valor</button>
-        <button class="swal2-styled" id="ajustarCorteBtn"
-          onclick="ajustarCorte()" disabled >Ajustar Corte</button>
+<body class="bg-gray-50">
+    <div class="flex justify-center py-8 px-4">
+        <table class="w-full max-w-2xl border-collapse bg-white shadow-lg rounded-lg overflow-hidden">
+            <tr>
+                <th colspan="5" class="border border-gray-300 px-4 py-3 text-center bg-blue-600 text-white font-bold text-lg">Hoja De Corte</th>
+            </tr>
+            <tr>
+                <th colspan="3" class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-blue-100 font-bold">Efectivo</th>
+                <th colspan="2" class="border border-gray-300 px-4 py-3 text-center bg-blue-100 font-bold">Tarjetas</th>
+            </tr>
+            <tr>
+                <th colspan="2" class="border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">Monedas  =</th>
+                <th colspan="1" class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100" id="row-2-col-3"></th>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" id="row-2-col-4">T.Débito</td>
+            </tr>
+            <tr>
+                <th class="w-16 border border-gray-300 px-4 py-3 text-center bg-gray-100">$</th>
+                <th class="w-16 border border-gray-300 px-4 py-3 text-center bg-gray-100">Cat</th>
+                <th class="w-16 border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100">Ttl</th>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-3-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">¢50</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-4-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-4-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" id="row-4-col-4">T.Crédito</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$1</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-5-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-5-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-5-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$2</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-6-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-6-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" id="row-6-col-4">T.Amex</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$5</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-7-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-7-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-7-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$10</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-8-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-8-col-3"></td>
+                <th class="w-16 border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold" colspan="0" rowspan="1" id="row-8-col-4">Vales   =</th>
+                <td class="w-16 border border-gray-300 px-4 py-3" colspan="1" rowspan="1" id="row-8-col-5"></td>
+            </tr>
+            <tr>
+                <th colspan="2" class="border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">Billetes   =</th>
+                <th colspan="1" class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100" id="row-9-col-3"></th>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-9-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$20</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-10-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-10-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-10-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$50</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-11-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-11-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-11-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$100</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-12-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-12-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-12-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$200</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-13-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-13-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-13-col-4"></td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$500</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-14-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-14-col-3"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1">Fondo</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 px-4 py-3">$1,000</td>
+                <td class="border border-gray-300 px-4 py-3" id="row-15-col-2"></td>
+                <td class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3" id="row-15-col-3"></td>
+                <td id="row-15-col-4" class="border border-gray-300 px-4 py-3 bg-gray-100" colspan="2" rowspan="1">0</td>
+            </tr>
+            <tr>
+                <th colspan="3" class="border-b-2 border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">PropinaEfectivo</th>
+                <th colspan="2" class="border-b-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">PropinaTarjeta</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-17-col-1"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-17-col-4"></td>
+            </tr>
+            <tr>
+                <th colspan="3" class="border-b-2 border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">T.Efectivo+Vales,s/F</th>
+                <th colspan="2" class="border-b-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">T.tarjetas</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-19-col-1"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-19-col-4"></td>
+            </tr>
+            <tr>
+                <th colspan="3" class="border-r-2 border-gray-400 border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">T.Efectivo+Vales,c/F</th>
+                <th colspan="2" class="border border-gray-300 px-4 py-3 text-center bg-gray-100 font-bold">T.Final</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-21-col-1"></td>
+                <td colspan="2" class="border border-gray-300 px-4 py-3" rowspan="1" id="row-21-col-4"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="flex justify-center gap-2 mt-8 mb-8 px-4 flex-wrap">
+        <button class="px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition duration-200" onclick="iniciarCorte()">Iniciar Corte</button>
+        <button class="px-4 py-2 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed" id="sugerirFondoBtn" onclick="sugerirFondo()" disabled>Sugerir Fondo</button>
+        <button class="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed" id="limpiarTablaBtn" onclick="limpiarTabla()" disabled>Limpiar Tabla</button>
+        <button class="px-4 py-2 bg-yellow-600 text-white font-semibold rounded hover:bg-yellow-700 transition duration-200" id="editarValorBtn" onclick="habilitarEdicion()">Editar Valor</button>
+        <button class="px-4 py-2 bg-purple-600 text-white font-semibold rounded hover:bg-purple-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed" id="ajustarCorteBtn" onclick="ajustarCorte()" disabled>Ajustar Corte</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="src/main.js"></script>

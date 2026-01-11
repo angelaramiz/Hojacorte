@@ -131,7 +131,97 @@ export function knapsack(items, capacity) {
 }
 
 /**
- * Genera una sugerencia de fondo basada en monedas y billetes disponibles
+ * Genera sugerencia de FONDO - Prioridad: monedas y billetes pequeños
+ */
+export function generarSugerenciaFondo(items, fondoObjetivo) {
+    // Ordenar: primero monedas, luego billetes pequeños (20-50), luego billetes medianos, luego vales
+    let itemsOrdenados = [...items].sort((a, b) => {
+        const esMonedaA = a.denominacion < 20 ? 0 : 1;
+        const esMonedaB = b.denominacion < 20 ? 0 : 1;
+        if (esMonedaA !== esMonedaB) return esMonedaA - esMonedaB; // Monedas primero
+        if (esMonedaA === 0) return a.denominacion - b.denominacion; // Monedas en orden ascendente
+        return a.denominacion - b.denominacion; // Billetes en orden ascendente
+    });
+
+    let total = 0;
+    let sugerencia = [];
+
+    // Usar monedas y billetes pequeños primero
+    for (let item of itemsOrdenados) {
+        if (total >= fondoObjetivo) break;
+        if (item.denominacion < 100) { // Prioridad: monedas y billetes pequeños
+            for (let i = 0; i < item.cantidad && total < fondoObjetivo; i++) {
+                total += item.denominacion;
+                const existente = sugerencia.find(s => s.denominacion === item.denominacion);
+                if (existente) {
+                    existente.cantidad++;
+                } else {
+                    sugerencia.push({ denominacion: item.denominacion, cantidad: 1 });
+                }
+            }
+        }
+    }
+
+    return sugerencia;
+}
+
+/**
+ * Genera sugerencia de CORTE - Prioridad: billetes grandes, vales
+ */
+export function generarSugerenciaCorte(items, corteObjetivo) {
+    // Ordenar descendente: billetes grandes primero, luego medianos, luego monedas
+    let itemsOrdenados = [...items].sort((a, b) => b.denominacion - a.denominacion);
+
+    let total = 0;
+    let sugerencia = [];
+
+    // Usar billetes grandes primero
+    for (let item of itemsOrdenados) {
+        if (total >= corteObjetivo) break;
+        for (let i = 0; i < item.cantidad && total < corteObjetivo; i++) {
+            total += item.denominacion;
+            const existente = sugerencia.find(s => s.denominacion === item.denominacion);
+            if (existente) {
+                existente.cantidad++;
+            } else {
+                sugerencia.push({ denominacion: item.denominacion, cantidad: 1 });
+            }
+        }
+    }
+
+    return sugerencia;
+}
+
+/**
+ * Genera sugerencia de PROPINA - Prioridad: billetes grandes a medianos
+ */
+export function generarSugerenciaPropina(items, propinaObjetivo) {
+    // Ordenar descendente: billetes grandes y medianos (>= 50)
+    let itemsOrdenados = [...items]
+        .filter(item => item.denominacion >= 50) // Solo billetes medianos y grandes
+        .sort((a, b) => b.denominacion - a.denominacion);
+
+    let total = 0;
+    let sugerencia = [];
+
+    for (let item of itemsOrdenados) {
+        if (total >= propinaObjetivo) break;
+        for (let i = 0; i < item.cantidad && total < propinaObjetivo; i++) {
+            total += item.denominacion;
+            const existente = sugerencia.find(s => s.denominacion === item.denominacion);
+            if (existente) {
+                existente.cantidad++;
+            } else {
+                sugerencia.push({ denominacion: item.denominacion, cantidad: 1 });
+            }
+        }
+    }
+
+    return sugerencia;
+}
+
+/**
+ * Genera una sugerencia genérica (mantiene compatibilidad con código existente)
  */
 export function generarSugerencia(items, fondoObjetivo, priorizarMonedas) {
     if (Array.isArray(items)) {

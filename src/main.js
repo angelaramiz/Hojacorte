@@ -21,6 +21,9 @@ import {
     obtenerBilletes,
     obtenerVales,
     generarSugerencia,
+    generarSugerenciaFondo,
+    generarSugerenciaCorte,
+    generarSugerenciaPropina,
     calcularCorteRestante,
     restarDeFormulario
 } from './calculations.js';
@@ -31,6 +34,9 @@ import {
     getGastoValue,
     actualizarPropina,
     generarMensaje,
+    generarMensajeFondo,
+    generarMensajeCorteRecomendado,
+    generarMensajePropina,
     generarMensajeCorte,
     crearContenidoPestanas,
     mostrarTab,
@@ -216,31 +222,45 @@ async function iniciarCorte() {
 }
 
 /**
- * Sugiere el fondo óptimo
+ * Sugiere el fondo óptimo, corte y propinas
  */
 function sugerirFondo() {
     const fondoObjetivo = parseFloat(document.getElementById(CONFIG.elementos.fondoCell).textContent) || CONFIG.fondoDefault;
     const items = [...obtenerMonedas(), ...obtenerBilletes(), ...obtenerVales()];
-    const sugerenciaFondo = generarSugerencia(items, fondoObjetivo, true);
-    const corteRestante = calcularCorteRestante(sugerenciaFondo);
+    
+    // Generar las tres sugerencias con prioridades específicas
+    const sugerenciaFondo = generarSugerenciaFondo(items, fondoObjetivo);
+    
+    // Calcular items restantes después del fondo
+    const itemsRestantes = items.map(item => ({
+        ...item,
+        cantidad: item.cantidad - (sugerenciaFondo.find(s => s.denominacion === item.denominacion)?.cantidad || 0)
+    })).filter(item => item.cantidad > 0);
+    
+    // Calcular corte restante
+    const totalEfectivo = parseFloat(document.getElementById(CONFIG.elementos.totalEfectivoCFCell).textContent) || 0;
+    const corteObjetivo = totalEfectivo - fondoObjetivo;
+    const sugerenciaCorte = generarSugerenciaCorte(itemsRestantes, corteObjetivo);
+    
+    // Propina sugerida (usar billetes grandes a medianos)
+    const totalPropinas = propinasEfectivo.total + propinasTarjeta.total;
+    const sugerenciaPropina = generarSugerenciaPropina(itemsRestantes, totalPropinas);
 
-    const contenidoFondo = generarMensaje(sugerenciaFondo);
-    const contenidoCorte = generarMensajeCorte(corteRestante);
-    const contenidoPropinas = mostrarPropinasEnSugerencia(propinasEfectivo.total + propinasTarjeta.total, sugerenciaFondo);
+    const contenidoFondo = generarMensajeFondo(sugerenciaFondo, fondoObjetivo);
+    const contenidoCorte = generarMensajeCorteRecomendado(sugerenciaCorte, corteObjetivo);
+    const contenidoPropinas = generarMensajePropina(sugerenciaPropina, totalPropinas);
 
     Swal.fire({
-        title: 'Sugerencia de Corte',
+        title: 'Sugerencia Completa de Corte',
         html: crearContenidoPestanas(contenidoFondo, contenidoCorte, contenidoPropinas),
         width: '600px',
         showCancelButton: true,
         confirmButtonText: 'Aceptar',
-        cancelButtonText: 'Reiniciar',
+        cancelButtonText: 'Cancelar',
         showDenyButton: true,
-        denyButtonText: 'Cambiar Prioridad'
+        denyButtonText: 'Reintentar'
     }).then((result) => {
-        if (result.isDismissed && result.dismiss === Swal.DismissReason.cancel) {
-            sugerirFondo();
-        } else if (result.isDenied) {
+        if (result.isDenied) {
             sugerirFondo();
         }
     });
